@@ -51,6 +51,29 @@ INSERT INTO users(id, firstName, lastName, email, password, is_admin) VALUES($1,
   return response.rows[0];
 };
 
+const createProduct = async ({ name, description, image, price, stock }) => {
+  const SQL = `
+INSERT INTO products(id, name, description, image, price, stock) VALUES($1, $2, $3, $4, $5, $6)
+`;
+  const response = await client.query(SQL, [
+    uuid.v4(),
+    name,
+    description,
+    image,
+    price,
+    stock,
+  ]);
+  return response.rows[0];
+};
+
+const fetchProducts = async () => {
+  const SQL = `
+      SELECT * FROM products;
+      `;
+  const response = await client.query(SQL);
+  return response.rows;
+};
+
 const fetchUsers = async () => {
   const SQL = `
     SELECT * FROM users;
@@ -63,5 +86,7 @@ module.exports = {
   client,
   createTables,
   createUser,
+  createProduct,
+  fetchProducts,
   fetchUsers,
 };
