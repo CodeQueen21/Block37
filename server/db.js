@@ -3,6 +3,7 @@ const client = new pg.Client(
   process.env.DATABASE_URL || "postgres://localhost/store_db"
 );
 const uuid = require("uuid");
+const bcrypt = require("bcrypt");
 
 const createTables = async () => {
   const SQL = `
@@ -51,7 +52,7 @@ INSERT INTO users(id, firstName, lastName, email, password, is_admin) VALUES($1,
     firstName,
     lastName,
     email,
-    password,
+    await bcrypt.hash(password, 5),
     is_admin,
   ]);
   return response.rows[0];
