@@ -21,7 +21,7 @@ const createTables = async () => {
         id UUID PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         description VARCHAR(255) NOT NULL,
-        image BYTEA,
+        image VARCHAR(255),
         price INTEGER NOT NULL,
         stock INTEGER DEFAULT 5 NOT NULL
     );
@@ -44,7 +44,7 @@ const createUser = async ({
   is_admin,
 }) => {
   const SQL = `
-INSERT INTO users(id, firstName, lastName, email, password, is_admin) VALUES($1, $2, $3, $4, $5, $6)
+INSERT INTO users(id, firstName, lastName, email, password, is_admin) VALUES($1, $2, $3, $4, $5, $6) RETURNING *
 `;
   const response = await client.query(SQL, [
     uuid.v4(),
@@ -59,7 +59,7 @@ INSERT INTO users(id, firstName, lastName, email, password, is_admin) VALUES($1,
 
 const createProduct = async ({ name, description, image, price, stock }) => {
   const SQL = `
-INSERT INTO products(id, name, description, image, price, stock) VALUES($1, $2, $3, $4, $5, $6)
+INSERT INTO products(id, name, description, image, price, stock) VALUES($1, $2, $3, $4, $5, $6) RETURNING *
 `;
   const response = await client.query(SQL, [
     uuid.v4(),
@@ -70,6 +70,33 @@ INSERT INTO products(id, name, description, image, price, stock) VALUES($1, $2, 
     stock,
   ]);
   return response.rows[0];
+};
+
+const createUserProduct = async ({
+  user_id,
+  product_id,
+  quantity,
+  purchased,
+}) => {
+  const SQL = `
+  INSERT INTO userProducts(id, user_id, product_id, quantity, purchased) VALUES($1, $2, $3, $4, $5) RETURNING *
+  `;
+  const response = await client.query(SQL, [
+    uuid.v4(),
+    user_id,
+    product_id,
+    quantity,
+    purchased,
+  ]);
+  return response.rows[0];
+};
+
+const fetchUserProducts = async () => {
+  const SQL = `
+        SELECT * FROM userProducts;
+        `;
+  const response = await client.query(SQL);
+  return response.rows;
 };
 
 const fetchProducts = async () => {
@@ -93,6 +120,8 @@ module.exports = {
   createTables,
   createUser,
   createProduct,
+  createUserProduct,
+  fetchUserProducts,
   fetchProducts,
   fetchUsers,
 };
