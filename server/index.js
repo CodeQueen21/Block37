@@ -7,6 +7,7 @@ const {
   fetchUsers,
   fetchProducts,
   fetchUserProducts,
+  deleteUserProduct,
 } = require("./db");
 const path = require("path");
 const express = require("express");
@@ -23,7 +24,7 @@ const init = async () => {
   await createTables();
   console.log("tables created");
 
-  const [Kayla, Dave, Sarah, battery] = await Promise.all([
+  const [Kayla, Dave, Sarah, battery, blender, radio] = await Promise.all([
     createUser({
       firstName: "Kayla",
       lastName: "White",
@@ -79,9 +80,23 @@ const init = async () => {
       quantity: 1,
       purchased: false,
     }),
+    createUserProduct({
+      user_id: Kayla.id,
+      product_id: blender.id,
+      quantity: 2,
+      purchased: false,
+    }),
+    createUserProduct({
+      user_id: Dave.id,
+      product_id: radio.id,
+      quantity: 5,
+      purchased: false,
+    }),
   ]);
-  const usersProducts = await fetchUserProducts();
-  console.log(usersProducts);
+  console.log(userProducts);
+  await deleteUserProduct(userProducts[0]);
+  console.log(await fetchUserProducts(Kayla.id));
+
   app.listen(port, () => console.log(`listening on port ${port}`));
 };
 

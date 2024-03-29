@@ -92,11 +92,12 @@ const createUserProduct = async ({
   return response.rows[0];
 };
 
-const fetchUserProducts = async () => {
+const fetchUserProducts = async (id) => {
   const SQL = `
-        SELECT * FROM userProducts;
+        SELECT * FROM userProducts
+        WHERE user_id = $1;
         `;
-  const response = await client.query(SQL);
+  const response = await client.query(SQL, [id]);
   return response.rows;
 };
 
@@ -116,6 +117,14 @@ const fetchUsers = async () => {
   return response.rows;
 };
 
+const deleteUserProduct = async ({ user_id, id }) => {
+  const SQL = `
+  DELETE 
+  FROM userProducts
+  WHERE user_id = $1 AND id = $2
+  `;
+  await client.query(SQL, [user_id, id]);
+};
 module.exports = {
   client,
   createTables,
@@ -125,4 +134,5 @@ module.exports = {
   fetchUserProducts,
   fetchProducts,
   fetchUsers,
+  deleteUserProduct,
 };
