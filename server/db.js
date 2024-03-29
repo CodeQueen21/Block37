@@ -25,7 +25,13 @@ const createTables = async () => {
         price INTEGER NOT NULL,
         stock INTEGER DEFAULT 5 NOT NULL
     );
-   
+    CREATE TABLE userProducts(
+        id UUID PRIMARY KEY,
+        user_id UUID REFERENCES users(id) NOT NULL,
+        product_id UUID REFERENCES products(id) NOT NULL,
+        quantity INTEGER NOT NULL,
+        purchased BOOLEAN DEFAULT FALSE
+        );
     `;
   await client.query(SQL);
 };
