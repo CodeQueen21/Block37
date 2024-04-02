@@ -6,6 +6,7 @@ const {
   fetchUsers,
   fetchProducts,
   fetchUserProducts,
+  fetchSingleUser,
   deleteUserProduct,
 } = require("./db");
 
@@ -84,6 +85,11 @@ const seedUserProducts = async (users, products) => {
     }),
   ]);
 };
+
+// const hi = async () => {
+//   console.log(await fetchSingleUser(seedUsers[0]));
+// };
+
 // exports a function that seeds the data
 module.exports = async () => {
   await createTables();
@@ -91,5 +97,6 @@ module.exports = async () => {
   const users = await seedUsers();
   const products = await seedProducts();
   const userProducts = await seedUserProducts(users, products);
-  console.log(userProducts);
+  console.log(users);
+  console.log(await fetchSingleUser(users[0].id));
 };

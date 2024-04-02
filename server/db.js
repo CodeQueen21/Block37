@@ -118,6 +118,14 @@ const fetchUsers = async () => {
   return response.rows;
 };
 
+const fetchSingleUser = async ({ id }) => {
+  const SQL = `
+  SELECT id FROM users WHERE id=$1;
+  `;
+  const response = await client.query(SQL, [id]);
+  return response.rows;
+};
+
 const deleteUserProduct = async ({ user_id, id }) => {
   const SQL = `
   DELETE 
@@ -174,4 +182,5 @@ module.exports = {
   fetchProducts,
   fetchUsers,
   deleteUserProduct,
+  fetchSingleUser,
 };

@@ -1,4 +1,4 @@
-const { client, fetchUsers, fetchProducts } = require("./db");
+const { client, fetchUsers, fetchProducts, fetchSingleUser } = require("./db");
 const seed = require("./seed");
 const path = require("path");
 const express = require("express");
@@ -11,7 +11,6 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, "images")));
 app.use("/api", apiRouter);
-
 
 const init = async () => {
   await client.connect();
@@ -26,7 +25,7 @@ const init = async () => {
   // console.log(userProducts);
   // await deleteUserProduct(userProducts[0]);
   // console.log(await fetchUserProducts(Kayla.id));
-
+  // console.log(await fetchSingleUser(users[0].id));
   app.listen(port, () => console.log(`listening on port ${port}`));
 };
 
