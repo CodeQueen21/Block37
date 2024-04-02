@@ -82,7 +82,7 @@ const createUserProduct = async ({
   purchased,
 }) => {
   const SQL = `
-  INSERT INTO userProducts(id, user_id, product_id, quantity, purchased) VALUES($1, $2, $3, $4, $5) RETURNING *
+  INSERT INTO userProducts(id, user_id, product_id, quantity, purchased) VALUES($1, $2, $3, $4, $5) RETURNING *;
   `;
   const response = await client.query(SQL, [
     uuid.v4(),
@@ -94,12 +94,11 @@ const createUserProduct = async ({
   return response.rows[0];
 };
 
-const fetchUserProducts = async (id) => {
+const fetchUserProducts = async () => {
   const SQL = `
-        SELECT * FROM userProducts
-        WHERE user_id = $1;
+        SELECT * FROM userProducts;
         `;
-  const response = await client.query(SQL, [id]);
+  const response = await client.query(SQL);
   return response.rows;
 };
 
@@ -145,7 +144,6 @@ const authenticate = async ({ email, password }) => {
 };
 
 const findUserWithToken = async (id) => {
-  let id;
   try {
     const payload = await jwt.verify(token, JWT);
     id = payload.id;
