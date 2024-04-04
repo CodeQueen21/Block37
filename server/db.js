@@ -94,6 +94,31 @@ const createUserProduct = async ({
   return response.rows[0];
 };
 
+const updateProduct = async ({
+  id,
+  name,
+  description,
+  image,
+  price,
+  stock,
+}) => {
+  const SQL = `
+   UPDATE products
+   SET name = $1, description = $2, image = $3, price = $4, stock = $5
+   WHERE id = $6 RETURNING *;
+   `;
+  const response = await client.query(SQL, [
+    name,
+    description,
+    image,
+    price,
+    stock,
+    id,
+  ]);
+  console.log(response.rows);
+  return response.rows[0];
+};
+
 const fetchUserProducts = async () => {
   const SQL = `
         SELECT * FROM userProducts;
@@ -192,4 +217,5 @@ module.exports = {
   deleteUserProduct,
   fetchSingleUser,
   fetchSingleProduct,
+  updateProduct,
 };
