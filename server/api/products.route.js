@@ -3,6 +3,7 @@ const {
   fetchSingleProduct,
   createProduct,
   updateProduct,
+  deleteProduct,
 } = require("../db");
 const express = require("express");
 const productsRouter = express.Router();
@@ -51,6 +52,14 @@ productsRouter.put("/:id", async (req, res, next) => {
         stock: req.body.stock,
       })
     );
+  } catch (error) {
+    next(error);
+  }
+});
+
+productsRouter.delete("/:id", async (req, res, next) => {
+  try {
+    res.status(201).send(await deleteProduct({ id: req.params.id }));
   } catch (error) {
     next(error);
   }
