@@ -1,4 +1,4 @@
-const { fetchUsers, fetchSingleUser, createUser, client } = require("../db");
+const { fetchUsers, fetchSingleUser, createUser } = require("../db");
 const express = require("express");
 const usersRouter = express.Router();
 

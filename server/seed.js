@@ -93,7 +93,8 @@ module.exports = async () => {
   const users = await seedUsers();
   const products = await seedProducts();
   const userProducts = await seedUserProducts(users, products);
-  console.log(users);
+  // console.log(users);
+  console.log(products);
   // console.log(users[0]);
   //console.log(await fetchSingleUser({ id: users[0].id }));
 };
