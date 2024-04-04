@@ -120,10 +120,10 @@ const fetchUsers = async () => {
 
 const fetchSingleUser = async ({ id }) => {
   const SQL = `
-  SELECT id FROM users WHERE id=$1;
+  SELECT id, firstname, lastname, email, is_admin FROM users WHERE id = $1;
   `;
   const response = await client.query(SQL, [id]);
-  return response.rows;
+  return response.rows[0];
 };
 
 const deleteUserProduct = async ({ user_id, id }) => {
