@@ -115,7 +115,16 @@ const updateProduct = async ({
     stock,
     id,
   ]);
-  console.log(response.rows);
+  return response.rows[0];
+};
+
+const updateUserProduct = async ({ id, quantity, purchased }) => {
+  const SQL = `
+UPDATE userProducts
+SET quantity = $1, purchased = $2
+WHERE id = $3 RETURNING *;
+`;
+  const response = await client.query(SQL, [quantity, purchased, id]);
   return response.rows[0];
 };
 
@@ -238,4 +247,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   fetchSingleUserProduct,
+  updateUserProduct,
 };
