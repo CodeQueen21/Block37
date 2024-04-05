@@ -173,7 +173,7 @@ const deleteUserProduct = async ({ user_id, id }) => {
   const SQL = `
   DELETE 
   FROM userProducts
-  WHERE user_id = $1 AND id = $2
+  WHERE user_id = $1 AND id = $2;
   `;
   await client.query(SQL, [user_id, id]);
 };
