@@ -31,7 +31,7 @@ const createTables = async () => {
     CREATE TABLE userProducts(
         id UUID PRIMARY KEY,
         user_id UUID REFERENCES users(id) NOT NULL,
-        product_id UUID REFERENCES products(id) NOT NULL,
+        product_id UUID REFERENCES products(id) ON DELETE CASCADE NOT NULL,
         quantity INTEGER NOT NULL,
         purchased BOOLEAN DEFAULT FALSE
         );
