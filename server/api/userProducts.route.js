@@ -2,8 +2,8 @@ const {
   fetchUserProducts,
   deleteUserProduct,
   fetchSingleUserProduct,
-  updateProduct,
   updateUserProduct,
+  createUserProduct,
 } = require("../db");
 const express = require("express");
 const userProductsRouter = express.Router();
@@ -19,6 +19,21 @@ userProductsRouter.get("/", async (req, res, next) => {
 userProductsRouter.get("/:id", async (req, res, next) => {
   try {
     res.send(await fetchSingleUserProduct({ id: req.params.id }));
+  } catch (error) {
+    next(error);
+  }
+});
+
+userProductsRouter.post("/:id", async (req, res, next) => {
+  try {
+    res.status(201).send(
+      await createUserProduct({
+        user_id: req.params.id,
+        product_id: req.body.product_id,
+        quantity: req.body.quantity,
+        purchased: req.body.purchased,
+      })
+    );
   } catch (error) {
     next(error);
   }
