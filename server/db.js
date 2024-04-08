@@ -195,41 +195,55 @@ const deleteUserProduct = async ({ user_id, id }) => {
   await client.query(SQL, [user_id, id]);
 };
 
-const authenticate = async ({ email, password }) => {
+const authenticate = async (email, password) => {
   const SQL = `
-  SELECT id, email FROM users WHERE email=$1;
+  SELECT id, password 
+  FROM users 
+  WHERE email = $1;
   `;
-  const response = await client.query(SQL, [username]);
-  if (
-    !response.rows.length ||
-    (await bcrypt.compare(password, response.rows[0].password)) === false
-  ) {
+  const response = await client.query(SQL, [email]);
+  const userInfo = response.rows;
+  const compare = await bcrypt.compare(password, userInfo[0].password);
+  if (!userInfo.length || compare === false) {
     const error = Error("not authorized");
     error.status = 401;
     throw error;
   }
-  return { token: response.rows[0].id };
+  const token = jwt.sign({ id: response.rows[0].id }, JWT);
+  return { token };
 };
 
-const findUserWithToken = async (id) => {
+const findUserWithToken = async (token) => {
   try {
     const payload = await jwt.verify(token, JWT);
-    id = payload.id;
+    console.log("payload", payload);
+    const id = payload.id;
+    const SQL = `
+    SELECT id, email FROM users WHERE id = $1;
+    `;
+    const response = await client.query(SQL, [id]);
+    if (!response.rows.length) {
+      const error = Error("not authorized");
+      error.status = 401;
+      throw error;
+    }
+    return response.rows[0];
   } catch (err) {
     const error = Error("not authorized");
     error.status = 401;
     throw error;
   }
-  const SQL = `
-  SELECT id, email FROM users WHERE id=$1;
-  `;
-  const response = await client.query(SQL, [id]);
-  if (!response.rows.length) {
-    const error = Error("not authorized");
-    error.status = 401;
-    throw error;
+};
+
+const isLoggedIn = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    console.log(token);
+    req.user = await findUserWithToken(token);
+    next();
+  } catch (error) {
+    next(error);
   }
-  return response.rows[0];
 };
 
 module.exports = {
@@ -248,4 +262,7 @@ module.exports = {
   deleteProduct,
   fetchSingleUserProduct,
   updateUserProduct,
+  authenticate,
+  isLoggedIn,
+  findUserWithToken,
 };

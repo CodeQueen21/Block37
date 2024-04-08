@@ -4,6 +4,7 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
+  isLoggedIn,
 } = require("../db");
 const express = require("express");
 const productsRouter = express.Router();
@@ -24,7 +25,7 @@ productsRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-productsRouter.post("/", async (req, res, next) => {
+productsRouter.post("/", isLoggedIn, async (req, res, next) => {
   try {
     res.status(201).send(
       await createProduct({
@@ -40,7 +41,7 @@ productsRouter.post("/", async (req, res, next) => {
   }
 });
 
-productsRouter.put("/:id", async (req, res, next) => {
+productsRouter.put("/:id", isLoggedIn, async (req, res, next) => {
   try {
     res.status(201).send(
       await updateProduct({
@@ -57,7 +58,7 @@ productsRouter.put("/:id", async (req, res, next) => {
   }
 });
 
-productsRouter.delete("/:id", async (req, res, next) => {
+productsRouter.delete("/:id", isLoggedIn, async (req, res, next) => {
   try {
     res.status(201).send(await deleteProduct({ id: req.params.id }));
   } catch (error) {

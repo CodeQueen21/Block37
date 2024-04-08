@@ -8,6 +8,7 @@ const {
   fetchUserProducts,
   fetchSingleUser,
   deleteUserProduct,
+  authenticate,
 } = require("./db");
 
 //creating the individual pieces of data
@@ -93,9 +94,15 @@ module.exports = async () => {
   const users = await seedUsers();
   const products = await seedProducts();
   const userProducts = await seedUserProducts(users, products);
-  // console.log(users);
-  console.log(products);
-  console.log(userProducts);
+  console.log(users);
+  // console.log(
+  //   authenticate(
+  //     "sarah@example.com",
+  //     "$2b$05$9AogaxtkftpTLIrw1KPmlO4YFH/Ri/ZHYnVZ0cabsPSDZfl/rZdp."
+  //   )
+  // );
+  // console.log(products);
+  // console.log(userProducts);
   // console.log(users[0]);
   //console.log(await fetchSingleUser({ id: users[0].id }));
 };

@@ -4,6 +4,7 @@ const {
   fetchSingleUserProduct,
   updateUserProduct,
   createUserProduct,
+  isLoggedIn,
 } = require("../db");
 const express = require("express");
 const userProductsRouter = express.Router();
@@ -24,7 +25,7 @@ userProductsRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-userProductsRouter.post("/:id", async (req, res, next) => {
+userProductsRouter.post("/:id", isLoggedIn, async (req, res, next) => {
   try {
     res.status(201).send(
       await createUserProduct({
@@ -39,7 +40,7 @@ userProductsRouter.post("/:id", async (req, res, next) => {
   }
 });
 
-userProductsRouter.put("/:id", async (req, res, next) => {
+userProductsRouter.put("/:id", isLoggedIn, async (req, res, next) => {
   try {
     res.status(201).send(
       await updateUserProduct({
@@ -55,6 +56,7 @@ userProductsRouter.put("/:id", async (req, res, next) => {
 
 userProductsRouter.delete(
   "/:user_id/userProducts/:id",
+  isLoggedIn,
   async (req, res, next) => {
     try {
       res.status(204).send(
